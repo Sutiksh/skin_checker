@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:skin_checker/pages/take_picture_screen.dart';
+import 'package:skin_checker/pages/pick_image.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -26,6 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: <Widget>[
                 RaisedButton(
+                  onPressed: (){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PickImage(),
+                      )
+                    );
+                  },
                   child: Text("Browse From Device"),
                 ),
                 RaisedButton(
