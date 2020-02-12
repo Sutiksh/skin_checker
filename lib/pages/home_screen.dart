@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:skin_checker/pages/take_picture_screen.dart';
-import 'package:skin_checker/pages/pick_image.dart';
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:toast/toast.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,6 +18,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // To track the file uploading state
   bool _isUploading = false;
+
+
+  void _getImage(BuildContext context, ImageSource source) async {
+    File image = await ImagePicker.pickImage(source: source);
+    setState(() {
+      _imageFile = image;
+    });
+    // Closes the bottom sheet
+    Navigator.pop(context);
+  }
+
+
+//  void _resetState() {
+//    setState(() {
+//      _isUploading = false;
+//      _imageFile = null;
+//    });
+//  }
 
   void _openImagePickerModal(BuildContext context) {
     final flatButtonColor = Theme.of(context).primaryColor;
@@ -31,21 +50,30 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Text(
                   'Pick an image',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.redAccent,
+                      fontSize: 20),
                 ),
                 SizedBox(
                   height: 10.0,
                 ),
                 FlatButton(
                   textColor: flatButtonColor,
-                  child: Text('Use Camera',style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    'Use Camera',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () {
                     _getImage(context, ImageSource.camera);
                   },
                 ),
                 FlatButton(
                   textColor: flatButtonColor,
-                  child: Text('Use Gallery',style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    'Use Gallery',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () {
                     _getImage(context, ImageSource.gallery);
                   },
@@ -70,9 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: RaisedButton(
           child: Text('Upload'),
           onPressed: () {
-//            _startUploading();
+            _startUploading();
           },
-          color: Colors.pinkAccent,
+          color: Colors.redAccent,
           textColor: Colors.white,
         ),
       );
@@ -80,20 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return btnWidget;
   }
 
-  void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
-    setState(() {
-      _imageFile = image;
-    });
-    // Closes the bottom sheet
-    Navigator.pop(context);
-  }
 
-    @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Image Upload Demo'),
+        title: Text('Skin Checker'),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
@@ -101,8 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(top: 40.0, left: 10.0, right: 10.0),
             child: OutlineButton(
               onPressed: () => _openImagePickerModal(context),
-              borderSide:
-                  BorderSide(color: Theme.of(context).accentColor, width: 1.0),
+              borderSide: BorderSide(color: Colors.redAccent, width: 1.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
