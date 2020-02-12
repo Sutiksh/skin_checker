@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: RaisedButton(
           child: Text('Upload'),
           onPressed: () {
-            _startUploading();
+//            _startUploading();
           },
           color: Colors.redAccent,
           textColor: Colors.white,
